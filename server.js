@@ -17,10 +17,10 @@ app.use(express.json());
 
 
 //ROUTER 
-app.use('/v1/auth',authRouter);
-app.use('/v1/course',courseRouter);
-app.use('/v1/user',userRouter);
-app.use('/v1/order',orderRouter);
+app.use('https://course-backend-1akf.onrender.com/v1/auth',authRouter);
+app.use('https://course-backend-1akf.onrender.com/v1/course',courseRouter);
+app.use('https://course-backend-1akf.onrender.com/v1/user',userRouter);
+app.use('https://course-backend-1akf.onrender.com/v1/order',orderRouter);
 
 app.listen(8000, ()=> {
   console.log("Server is running....")
