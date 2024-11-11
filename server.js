@@ -7,17 +7,21 @@ const authRouter = require("./routes/auth");
 const courseRouter = require("./routes/course");
 const userRouter = require("./routes/user");
 const orderRouter = require("./routes/order");
+const cookieParser = require('cookie-parser');
 dotenv.config();
 connectDB();
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true
+}))
 app.use(express.json());
-
+app.use(cookieParser());
 //ROUTER
-app.use("https://course-backend-1akf.onrender.com/v1/auth", authRouter);
-app.use("https://course-backend-1akf.onrender.com/v1/course", courseRouter);
-app.use("https://course-backend-1akf.onrender.com/v1/user", userRouter);
-app.use("https://course-backend-1akf.onrender.com/v1/order", orderRouter);
+app.use("/v1/auth", authRouter);
+app.use("/v1/course", courseRouter);
+app.use("/v1/user", userRouter);
+app.use("/v1/order", orderRouter);
 
 app.listen(process.env.PORT || 8000, () => {
   console.log("Server is running....");

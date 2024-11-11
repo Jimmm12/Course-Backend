@@ -1,10 +1,15 @@
 const { Order, User, Course } = require("../models/index");
 
 const orderControllers = {
-  // Create Order
   createOrder: async (req, res) => {
     try {
-      const { user_id, courses, total_price, payment_status } = req.body;
+      // Giả sử bạn đã xác thực người dùng, và ID khóa học được gửi qua body
+      const user_id = req.user._id; // ID người dùng xác thực từ middleware
+      const { courses, total_price, payment_status } = req.body; // Các khóa học được gửi trong body
+
+      if (!courses || courses.length === 0) {
+        return res.status(400).json({ message: "No courses selected" });
+      }
 
       // Tạo một đơn hàng mới
       const newOrder = new Order({
@@ -33,7 +38,12 @@ const orderControllers = {
               (c) => c.course_id.toString() === course.course_id
             )
           ) {
-            user.courses_enrolled.push({ course_id: course.course_id });
+            user.courses_enrolled.push({
+              course_id: course.course_id,
+              title: courseDetails.title, // Include course title
+              instructor: courseDetails.instructor, // Include instructor name
+              duration: courseDetails.duration, // Include course duration
+            });
             enrolledCourses.push(courseDetails); // Lưu thông tin khóa học đã enroll
           }
         }
@@ -61,12 +71,18 @@ const orderControllers = {
 
       res.status(200).json({
         order: orderResponse,
+        status: "success",
         message: "Create order and enroll successfully!",
         success: true,
       });
     } catch (err) {
-      res.status(500).json({ message: "Server error", error: err.message });
+      res.status(500).json({
+        message: "Server error",
+        error: err.message,
+        status: "error",
+      });
     }
   },
 };
+
 module.exports = orderControllers;

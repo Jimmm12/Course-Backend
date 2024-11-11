@@ -34,11 +34,25 @@ const courseControllers = {
   getACourse: async (req, res) => {
     try {
       const aCourse = await Course.findById(req.params.id);
+      if (!aCourse) {
+        return res.status(404).json({ message: "Course not found" });
+      }
       res.status(200).json(aCourse);
     } catch (err) {
-      return res
-      .status(500)
-      .json({ message: "Server error", error: err.message });
+      return res.status(500).json({ message: "Server error", error: err.message });
+    }
+  },
+
+  //GET A COURSE FOR User
+  getACourseUser: async (req, res) => {
+    try {
+      const aCourse = await Course.findById(req.params.id);
+      if (!aCourse) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      res.status(200).json(aCourse);
+    } catch (err) {
+      return res.status(500).json({ message: "Server error", error: err.message });
     }
   },
 

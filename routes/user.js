@@ -1,17 +1,17 @@
 const router = require("express").Router();
 const userControllers = require("../controllers/userControllers");
-
+const authMiddleware = require("../Middleware/authMiddleware")
 // Get All User Infor
-router.get("/", userControllers.getAllUserInfor);
+router.get("/",authMiddleware, userControllers.getAllUserInfor);
 
 // Get A user Infor 
-router.get("/:id", userControllers.getAUserInfor);
+router.get("/:id",authMiddleware, userControllers.getAUserInfor);
 
 // Update user 
-router.put("/:id", userControllers.updateUser);
+router.put("/update/:id",authMiddleware, userControllers.updateUser);
 
 // Get Enroll
-router.get("/:id/courses", userControllers.getEnrolledCourses);
+router.get("/:id/courses", authMiddleware, userControllers.getEnrolledCourses);
 
 
 

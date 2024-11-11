@@ -30,7 +30,7 @@ const userControllers = {
     try {
       const user = await User.findById(req.params.id);
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ message: "User not found", success: error, status: "error", });
       }
       // Update password
       if (req.body.password) {
@@ -39,13 +39,14 @@ const userControllers = {
       await user.updateOne({ $set: req.body });
       res.status(200).json({
         user,
-        message: "Update sccussefully!",
+        message: "Cập Nhập Thành Công!",
         success: true,
+        status: "success",
       });
     } catch (err) {
       return res
         .status(500)
-        .json({ message: "Server error", error: err.message });
+        .json({ message: "Server error", error: err.message, status: "error" });
     }
   },
   // Get Enroll

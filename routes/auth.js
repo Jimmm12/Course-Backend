@@ -9,6 +9,10 @@ router.post("/register", authControllers.registerUser);
 // login
 router.post("/login", authControllers.loginUser);
 
-router.post('/logout', authMiddleware, authControllers.logoutUser);
+//refresh
+// router.post("/refresh", authControllers.requestRefreshToken);
+
+// logout
+router.post('/logout',authMiddleware,  authControllers.logoutUser);
 
 module.exports = router;

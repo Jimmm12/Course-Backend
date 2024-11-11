@@ -34,6 +34,10 @@ const courseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  imageUrl: {
+    type: String,
+    required: true,
+  },
   created_at: {
     type: Date,
   },
@@ -61,9 +65,12 @@ const useSchema = new mongoose.Schema(
       {
         course_id: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
         enrolled_at: { type: Date, default: Date.now },
+        title: String,
+        instructor: String,
+        duration: String,
       },
     ],
-  },
+  }, 
   { timestamps: true }
 );
 
@@ -72,6 +79,7 @@ const orderSchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required: true,
   },
   courses: [
     {
@@ -79,7 +87,10 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Course",
       },
-      price: Number,
+      price: {
+        type: Number,
+        required: true,
+      },
     },
   ],
   total_price: {
@@ -88,20 +99,35 @@ const orderSchema = new mongoose.Schema({
   },
   payment_status: {
     type: String,
-    required: true,
+    enum: ["pending", "completed", "failed"],
+    default: "pending",
+  },
+  payment_method: {
+    type: String,
+    enum: ["credit_card", "paypal"],
   },
   order_date: {
     type: Date,
-    default: Date.now, // Thiết lập giá trị mặc định cho ngày đặt hàng
+    default: Date.now,
   },
+});
+
+// RefreshTokenSchema
+
+const RefreshTokenSchema = new mongoose.Schema({
+  token: { type: String, required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  createdAt: { type: Date, default: Date.now, expires: '30d' }, // Token expires after 30 days
 });
 
 let User = mongoose.model("User", useSchema);
 let Course = mongoose.model("Course", courseSchema);
 let Order = mongoose.model("Order", orderSchema);
+let RefreshToken = mongoose.model("RefreshToken", RefreshTokenSchema);
 
 module.exports = {
   User,
   Course,
   Order,
+  RefreshToken
 };

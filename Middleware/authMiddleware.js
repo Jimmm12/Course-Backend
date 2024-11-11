@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 // Middleware để xác thực JWT token
 const authMiddleware = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
+  const token = req.header('token')?.replace('Bearer ', '');
   
   if (!token) {
     return res.status(401).json({ message: 'Access denied. No token provided.' });
