@@ -6,7 +6,7 @@ const authMiddleware = require("../Middleware/authMiddleware");
 const router = require("express").Router();
 
 // CREATE COURSE
-router.post('/',authMiddleware, courseControllers.createCourse);
+router.post('/', courseControllers.createCourse);
 
 // GET ALL COURSE
 router.get('/', courseControllers.getAllCourse);
