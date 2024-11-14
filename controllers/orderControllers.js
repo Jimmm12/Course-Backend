@@ -98,9 +98,6 @@ const orderControllers = {
               <p style="font-size: 16px; color: #333;">Tổng giá trị đơn hàng: <strong>${total_price} VNĐ</strong></p>
               <p style="font-size: 16px; color: #333;">Phương thức thanh toán: <strong>${payment_method}</strong></p>
               <p style="font-size: 16px; color: #333;">Cảm ơn bạn đã sử dụng nền tảng của chúng tôi!</p>
-              <p style="text-align: center; margin-top: 20px;">
-                <a href="#" style="background-color: #4CAF50; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 4px;">Xem Chi Tiết Đơn Hàng Trong Thông Tin Người Dùng</a>
-              </p>
             </div>
           </div>
         `,
