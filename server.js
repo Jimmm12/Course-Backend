@@ -13,7 +13,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL, 
+    origin: "*", 
     credentials: true, 
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Include OPTIONS for preflight requests
     allowedHeaders: ["Content-Type", "Authorization", "token"], // Add any additional headers if needed
