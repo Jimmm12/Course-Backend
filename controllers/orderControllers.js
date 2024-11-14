@@ -3,15 +3,15 @@ const { Order, User, Course } = require("../models/index");
 const orderControllers = {
   createOrder: async (req, res) => {
     try {
-      // Giả sử bạn đã xác thực người dùng, và ID khóa học được gửi qua body
-      const user_id = req.user._id; // ID người dùng xác thực từ middleware
-      const { courses, total_price, payment_status } = req.body; // Các khóa học được gửi trong body
+      // Get authenticated user's ID and course information from request body
+      const user_id = req.user.id;
+      const { courses, total_price, payment_method } = req.body;
 
       if (!courses || courses.length === 0) {
         return res.status(400).json({ message: "No courses selected" });
       }
 
-      // Tạo một đơn hàng mới
+      // Create a new order
       const newOrder = new Order({
         user_id,
         courses: courses.map((course) => ({
@@ -19,14 +19,14 @@ const orderControllers = {
           price: course.price,
         })),
         total_price,
-        payment_status,
+        payment_method,
         order_date: new Date(),
       });
 
-      // Lưu đơn hàng
+      // Save the order
       const savedOrder = await newOrder.save();
 
-      // Tự động enroll khóa học
+      // Automatically enroll the user in the purchased course(s)
       const user = await User.findById(user_id);
       const enrolledCourses = [];
       if (user) {
@@ -40,33 +40,32 @@ const orderControllers = {
           ) {
             user.courses_enrolled.push({
               course_id: course.course_id,
-              title: courseDetails.title, // Include course title
-              instructor: courseDetails.instructor, // Include instructor name
-              duration: courseDetails.duration, // Include course duration
+              title: courseDetails.title,
+              instructor: courseDetails.instructor,
+              duration: courseDetails.duration,
             });
-            enrolledCourses.push(courseDetails); // Lưu thông tin khóa học đã enroll
+            enrolledCourses.push(courseDetails);
           }
         }
         await user.save();
       }
 
-      // Populate thông tin người dùng (chỉ lấy tên và email)
+      // Populate user info and course details for response
       const populatedOrder = await Order.findById(savedOrder._id)
         .populate({
           path: "user_id",
-          select: "username email", // Chỉ lấy tên và email
+          select: "username email",
         })
         .populate({
           path: "courses.course_id",
           select:
-            "title description price instructor duration rating students_enrolled videoId", // Chỉ lấy các trường cần thiết
+            "title description price instructor duration rating students_enrolled videoId",
         })
         .exec();
 
-      // Thêm thông tin khóa học đã enroll vào phản hồi
       const orderResponse = {
-        ...populatedOrder.toObject(), // Chuyển đổi thành đối tượng JavaScript
-        enrolledCourses: enrolledCourses, // Thêm khóa học đã enroll
+        ...populatedOrder.toObject(),
+        enrolledCourses: enrolledCourses,
       };
 
       res.status(200).json({
