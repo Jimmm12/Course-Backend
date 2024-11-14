@@ -50,6 +50,7 @@ const orderControllers = {
         }
         await user.save();
       }
+     
 
       // Step 3: Populate order with detailed user and course info
       const populatedOrder = await Order.findById(savedOrder._id)
@@ -76,7 +77,10 @@ const orderControllers = {
           pass: process.env.EMAIL_PASSWORD, // Your email password
         },
       });
-
+      const formatPrice = (price) => {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+      };
+    
       const mailOptions = {
         from: "huytranhd22@gmail.com", // Sender address
         to: user.email, // Receiver address
@@ -95,7 +99,7 @@ const orderControllers = {
                     </li>`;
                 }).join("")}
               </ul>
-              <p style="font-size: 16px; color: #333;">Tổng giá trị đơn hàng: <strong>${total_price} VNĐ</strong></p>
+              <p style="font-size: 16px; color: #333;">Tổng giá trị đơn hàng: <strong>${formatPrice(total_price)} VNĐ</strong></p>
               <p style="font-size: 16px; color: #333;">Phương thức thanh toán: <strong>${payment_method}</strong></p>
               <p style="font-size: 16px; color: #333;">Cảm ơn bạn đã sử dụng nền tảng của chúng tôi!</p>
             </div>
